@@ -1,0 +1,27 @@
+=== MySQL 9.7 (Hypergraph ON) ===
+mysql: Deprecated program name. It will be removed in a future release, use '/usr/bin/mariadb' instead
+WARNING: option --ssl-verify-server-cert is disabled, because of an insecure passwordless login.
+EXPLAIN
+-> Sort: cnt DESC  (cost=14589..14589 rows=4) (actual time=15.1..15.1 rows=16 loops=1)\n    -> Table scan on <temporary>  (cost=14587..14588 rows=4) (actual time=15.1..15.1 rows=16 loops=1)\n        -> Aggregate using temporary table  (cost=14587..14587 rows=4) (actual time=15.1..15.1 rows=16 loops=1)\n            -> Inner hash join (r.inventory_id = i.inventory_id)  (cost=5593..9782 rows=8004) (actual time=5.13..10.1 rows=12577 loops=1)\n                -> Covering index range scan on r using rental_date over ('2005-07-01 00:00:00' <= rental_date)  (cost=0.355..2842 rows=8004) (actual time=0.168..2.78 rows=12577 loops=1)\n                -> Hash\n                    -> Inner hash join (i.film_id = f.film_id)  (cost=1522..3830 rows=4581) (actual time=1.77..3.85 rows=4581 loops=1)\n                        -> Covering index scan on i using idx_fk_film_id  (cost=0.342..1564 rows=4581) (actual time=0.127..1.13 rows=4581 loops=1)\n                        -> Hash\n                            -> Inner hash join (f.film_id = fc.film_id)  (cost=630..1146 rows=1000) (actual time=0.538..1.36 rows=1000 loops=1)\n                                -> Nested loop inner join  (cost=0.36..360 rows=1000) (actual time=0.0294..0.592 rows=1000 loops=1)\n                                    -> Index scan on c using PRIMARY  (cost=0.581..9.29 rows=16) (actual time=0.00782..0.0127 rows=16 loops=1)\n                                    -> Covering index lookup on fc using fk_film_category_category (category_id = c.category_id)  (cost=0.35..21.9 rows=62.5) (actual time=0.0138..0.0277 rows=62.5 loops=16)\n                                -> Hash\n                                    -> Covering index scan on f using idx_fk_language_id  (cost=0.297..297 rows=1000) (actual time=0.142..0.274 rows=1000 loops=1)\n
+--- hypergraph trace check ---
+mysql: Deprecated program name. It will be removed in a future release, use '/usr/bin/mariadb' instead
+WARNING: option --ssl-verify-server-cert is disabled, because of an insecure passwordless login.
+category	cnt
+Sports	944
+Animation	918
+Action	865
+Family	857
+Sci-Fi	855
+Drama	823
+Foreign	820
+Documentary	804
+Games	758
+New	748
+Children	744
+Classics	741
+Comedy	734
+Horror	677
+Travel	653
+Music	636
+hypergraph_used
+1
