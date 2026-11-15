@@ -19,4 +19,5 @@ SPDX-License-Identifier: Apache-2.0
 - The document should answer: if I need to change X, where do I look and what does it affect? Prefer durable structure over volatile implementation details.
 - If `archmd` is installed, run `archmd check` after editing and resolve every ERROR. Without it, keep every ID marker and keep the required sections: project-structure, high-level-diagram, core-components, project-identification.
 - If `.architecture/` exists (this requires `archmd`), ARCHITECTURE.md is generated: edit the files in `.architecture/` and then run `archmd build`; never edit ARCHITECTURE.md directly.
+ドキュメントとコメントは基本日本語で書く。ARCHITECTURE.md の見出し(H2)も日本語に翻訳してよい。ただし `<!-- arch:... -->` のIDマーカーは絶対に変更しない。
 <!-- archmd:end -->
