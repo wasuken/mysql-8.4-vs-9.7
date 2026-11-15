@@ -1,0 +1,69 @@
+# compose.yml
+services:
+  mysql84:
+    build:
+      context: .
+      args:
+        MYSQL_VERSION: "8.4"
+    container_name: mysql84-compare
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql84-data:/var/lib/mysql
+      - type: bind
+        source: ${SAKILA_DIR:-./data/sakila-db}/sakila-schema.sql
+        target: /docker-entrypoint-initdb.d/01-sakila-schema.sql
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SAKILA_DIR:-./data/sakila-db}/sakila-data.sql
+        target: /docker-entrypoint-initdb.d/02-sakila-data.sql
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=rootpass mysqladmin ping -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
+
+  mysql97:
+    build:
+      context: .
+      args:
+        MYSQL_VERSION: "9.7"
+    container_name: mysql97-compare
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql97-data:/var/lib/mysql
+      - type: bind
+        source: ${SAKILA_DIR:-./data/sakila-db}/sakila-schema.sql
+        target: /docker-entrypoint-initdb.d/01-sakila-schema.sql
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SAKILA_DIR:-./data/sakila-db}/sakila-data.sql
+        target: /docker-entrypoint-initdb.d/02-sakila-data.sql
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=rootpass mysqladmin ping -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  mysql84-data:
+  mysql97-data:
