@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        MYSQL_VERSION: "8.4"
+        mysql_version: "8.4"
     container_name: mysql84-compare
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
@@ -20,7 +20,7 @@ services:
         bind:
           create_host_path: false
       - type: bind
-        source: ${SAKILA_DIR:-./data/sakila-db}/sakila-data.sql
+        source: ${sakila_dir:-./data/sakila-db}/sakila-data.sql
         target: /docker-entrypoint-initdb.d/02-sakila-data.sql
         read_only: true
         bind:

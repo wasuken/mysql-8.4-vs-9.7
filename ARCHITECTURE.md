@@ -13,18 +13,19 @@ SPDX-License-Identifier: Apache-2.0
 ## Project layout
 
 - ルート: `compose.yml`・`Dockerfile`・`Makefile` が実行環境、`compare.sh`・`verify.sh`・`query.sql` が比較・検証を担当する。
+- `queries/`: 比較対象の SQL を1ファイル1文で管理する。
 - `data/`: `make setup` が取得するアーカイブと `data/sakila-db/` のスキーマ SQL・データ SQL・モデルファイル。Git 管理対象外。
-- `results/`: 比較結果とトレース抜粋。ルートの `result_*.txt` にも実行結果を保存している。
+- `results/`: 比較の集計表、EXPLAIN ANALYZE の生出力、プラン差分、過去の比較結果。
 
 <!-- arch:high-level-diagram | System map | Show the system overview and connections between major components. -->
 ## System map
 
-`Makefile` → Docker Compose → `mysql84` / `mysql97` → 各専用ボリューム。ホストの `compare.sh`・`verify.sh` → mysql クライアント → 各 DB（ポート 3306 / 3307）。`query.sql` → `compare.sh` → `results/`。
+`Makefile` → Docker Compose → `mysql84` / `mysql97` → 各専用ボリューム。ホストの `compare.sh`・`verify.sh` → mysql クライアント → 各 DB（ポート 3306 / 3307）。`queries/` → `compare.sh` → `results/`。
 
 <!-- arch:core-components | Components | Describe each central module and the responsibility it owns. -->
 ## Components
 
-- `compare.sh`: Sakila に対して 8.4 の既定設定と 9.7 の Hypergraph OFF / ON で `EXPLAIN ANALYZE` を実行し、結果・トレース抜粋を保存して時間を集計する。比較 SQL は `query.sql`、SQL ファイルと出力先は引数で変更できる。
+- `compare.sh`: Sakila の全テーブルの統計を更新し、8.4 の既定設定と 9.7 の Hypergraph OFF / ON で `EXPLAIN ANALYZE` を反復実行する。時間の中央値、プラン差分、結果一致、トレースで確認した Hypergraph 使用有無を集計する。入力は既定の `queries/` から SQL ファイル1本または別ディレクトリに変更できる。
 - `verify.sh`: バージョン、optimizer_switch、DDL / DML / SELECT、9.7 のトレースを確認する。実行ごとに `verify_db` を再作成する。
 - `Makefile`: Sakila の取得・展開、起動・停止・検証・比較・ログ・ボリューム削除の入口。`compare-84` / `compare-97` も両バージョンの比較スクリプトを呼ぶ。
 

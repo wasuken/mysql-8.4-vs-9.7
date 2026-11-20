@@ -3,7 +3,7 @@
 .PHONY: setup up down verify logs clean compare compare-84 compare-97
 
 # デフォルトの SQL ファイルと出力先（上書き可）
-SQL_FILE ?= query.sql
+SQL_FILE ?= queries
 OUT_DIR  ?= results
 
 # Sakila の取得先と保存先（上書き可）
@@ -57,11 +57,11 @@ compare: up
 	       [ "$$(docker inspect -f '{{.State.Health.Status}}' mysql97-compare 2>/dev/null)" = "healthy" ]; do \
 	  sleep 2; \
 	done
-	bash compare.sh $(SQL_FILE) $(OUT_DIR)
+	bash compare.sh "$(SQL_FILE)" "$(OUT_DIR)"
 
-# 8.4 のみ / 9.7 のみを個別に実行したい場合のフック
+# 従来のターゲット名でも同じ3構成を比較する。
 compare-84: up
-	bash compare.sh $(SQL_FILE) $(OUT_DIR)
+	bash compare.sh "$(SQL_FILE)" "$(OUT_DIR)"
 
 compare-97: up
-	bash compare.sh $(SQL_FILE) $(OUT_DIR)
+	bash compare.sh "$(SQL_FILE)" "$(OUT_DIR)"
